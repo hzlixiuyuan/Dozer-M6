@@ -108,9 +108,14 @@ jobs:
           else
             TAG="$GITHUB_REF_NAME"
           fi
+          EXTRA=""
+          if [ "$GITHUB_REF_NAME" = "macos27" ]; then
+            EXTRA="--prerelease"
+          fi
           gh release create "$TAG" \
             dist/Dozer-universal.zip \
             dist/Dozer-universal.dmg \
             dist/SHA256SUMS.txt \
+            $EXTRA \
             --title "Dozer 通用版 · ${GITHUB_REF_NAME} · 自动构建 #${GITHUB_RUN_NUMBER}" \
             --notes-file dist/RELEASE_NOTES.md
