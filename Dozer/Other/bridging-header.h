@@ -6,5 +6,7 @@
 #define bridging_header_h
 
 #import <Cocoa/Cocoa.h>
+#import <MASShortcut/Shortcut.h>
+#import "../StatusIconClasses/NativeVisibilityBridge.h"
 
 #endif

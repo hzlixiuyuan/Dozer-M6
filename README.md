@@ -8,8 +8,8 @@
 	<a href="https://img.shields.io/badge/platform-macOS-lightgrey.svg">
  		<img src="https://img.shields.io/badge/platform-macOS-lightgrey.svg" alt="platform">
 	</a>
-	<a href="https://img.shields.io/badge/requirements-macOS Big Sur+-ff69b4.svg">
- 		<img src="https://img.shields.io/badge/requirements-macOS Big Sur+-lightgrey.svg" alt="systemrequirements">
+	<a href="https://img.shields.io/badge/requirements-macOS High Sierra+-ff69b4.svg">
+ 		<img src="https://img.shields.io/badge/requirements-macOS High Sierra+-lightgrey.svg" alt="systemrequirements">
 	</a>
 	<a href="https://github.com/sindresorhus/swiftlint-sindre">
  		<img src="https://img.shields.io/badge/SwiftLint-Sindre-hotpink.svg" alt="swiftlint">
@@ -25,26 +25,17 @@
 <p align="center"></p>
 <a href="https://www.buymeacoffee.com/mortennn" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
 
-## ⚙️ Build from source (Apple Silicon / universal)
+## ⚙️ Install / Build
 
-> The original Homebrew cask `dozer` was disabled in Dec 2024 and removed in Dec 2025,
-> and the published DMG (v4.0.0, 2019) is an **Intel-only x86_64** binary that only runs
-> under Rosetta 2. This fork builds a native **arm64 + x86_64 universal** app instead,
-> so it runs natively on every M-series Mac (M1 ... M6) without Rosetta.
-
-Requirements: macOS 11+ (Big Sur), Xcode 26, Homebrew.
+> The Homebrew cask `dozer` was disabled in Dec 2024 and removed in Dec 2025, and the
+> published DMG (v4.0.0, 2019) is an **Intel-only x86_64** binary that needs Rosetta 2.
+> Build the universal **arm64 + x86_64** app from source instead — see the
+> **macOS 27 fork** section below. It runs natively on every M-series Mac (M1 ... M6).
 
 ```shell
-make app      # builds Dozer.app into build/Build/Products/Release/ (ad-hoc signed)
-make verify   # prints architectures; must show "arm64 x86_64"
-open build/Build/Products/Release/Dozer.app
+make app      # build build/Build/Products/Release/Dozer.app (ad-hoc signed)
+make verify   # confirm the binary contains arm64
 ```
-
-`make build` generates `Dozer.xcodeproj` and opens it in Xcode instead.
-`make prepare` only installs the tooling (SwiftGen, XcodeGen, SwiftLint) and generates the project.
-
-For distribution outside your own Mac, re-sign with a Developer ID certificate and notarize;
-`make app` uses an ad-hoc signature intended for local use.
 
 ## ⚫️ Dozer Icons
 
@@ -70,8 +61,48 @@ There are 2 or 3, numbered from right to left:
 <!-- **Checkout [this GIF](https://raw.githubusercontent.com/Mortennn/Dozer/master/Stuff/demo.gif) to watch Dozer in action.** -->
 
 ## 📄 Requirements
-macOS 11+ (Big Sur), Apple Silicon (arm64) or Intel (x86_64) — universal binary.
+macOS 11+ recommended (the upstream target is 10.13), Apple Silicon (arm64) or
+Intel (x86_64) — universal binary. On macOS 27+, the compatibility path below
+requires Accessibility permission and installation in `/Applications`.
 
-Note: the menu-bar hiding technique used here relies on legacy status-item behaviour.
-On macOS 27 and newer, use the `Dozer-M6-macOS27` variant instead, which reads icon
-positions through Accessibility.
+## macOS 27 fork
+
+The `macOS-27` branch adds an experimental compatibility path for macOS 27.
+Apple's new menu bar discards Dozer's oversized separator instead of hiding
+the icons to its left. This branch uses the system's menu bar visibility service
+on macOS 27, and retains the original mechanism on earlier releases.
+
+Build a local Apple Silicon + Intel app with Xcode and Homebrew installed:
+
+```shell
+brew install carthage xcodegen swiftgen swiftlint
+make app
+```
+
+The app is at `build/Build/Products/Release/Dozer.app`. Quit the previous Dozer,
+copy this build to `/Applications/Dozer.app`, and launch it from there.
+On the first hide, allow Dozer in **System Settings → Privacy & Security →
+Accessibility**, then click the dot again. Arrange the icons with ⌘-drag as
+described above; the left Dozer dot remains the normal hiding boundary.
+
+macOS 27 limitations:
+
+- Visibility is controlled per application. If an app has icons on both sides
+  of a separator, its most visible placement wins and its icons stay together.
+- macOS keeps core system controls, including Control Center, Wi-Fi and the clock, visible.
+- This uses the private `MenuBarClientCore` framework, following
+  [Hidden Bar's macOS 27 implementation](https://github.com/dwarvesf/hidden/releases/tag/v1.11.1).
+  An OS update may change it. If it is unavailable or a request fails, Dozer
+  restores the icons and explains the problem.
+- Place the app in `/Applications` before using it. The system must resolve
+  Dozer's bundle identifier to keep its toggle visible.
+- This locally signed build is intended for personal use. A distributed release
+  still needs Developer ID signing and notarization. Rebuilding may require
+  granting Accessibility again.
+- Layout is read while all sections are visible. After rearranging icons with
+  the optional remove section active, Option-click to show all sections before
+  collapsing again. Apps launched while collapsed may appear after the next expand.
+
+Run `make test` after the initial build to check classification, cancellation,
+permission errors, and restoration. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
+for the license of the adapted visibility bridge and Accessibility inventory.

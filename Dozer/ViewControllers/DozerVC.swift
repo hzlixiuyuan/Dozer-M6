@@ -4,11 +4,11 @@
 
 import Cocoa
 import Sparkle
-import Settings
+import Preferences
 
-final class Dozer: NSViewController, SettingsPane {
-    let paneIdentifier = Settings.PaneIdentifier.dozer
-    let paneTitle: String = "Dozer"
+final class Dozer: NSViewController, PreferencePane {
+    let preferencePaneIdentifier = Preferences.PaneIdentifier.dozer
+    let preferencePaneTitle: String = "Dozer"
     let toolbarItemIcon = NSImage(named: "AppIcon")!
 
     override var nibName: NSNib.Name? { "Dozer" }
@@ -25,10 +25,8 @@ final class Dozer: NSViewController, SettingsPane {
             versionLabel.stringValue = "\(releaseVersionNumber) (\(buildVersionNumber))"
         }
 
-        if let appDelegate = NSApp.delegate as? AppDelegate {
-            checkForUpdates.target = appDelegate.updaterController
-            checkForUpdates.action = #selector(SPUStandardUpdaterController.checkForUpdates(_:))
-        }
+        checkForUpdates.target = SUUpdater.shared()!
+        checkForUpdates.action = #selector(SUUpdater.shared()!.checkForUpdates(_:))
 
         quit.action = #selector(NSApp.terminate(_:))
     }

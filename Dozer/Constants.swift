@@ -3,9 +3,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import Cocoa
-import Settings
+import Preferences
 import Defaults
-import KeyboardShortcuts
 
 extension Defaults.Keys {
     static let hideOnLogin: Defaults.Key<Bool> = Key<Bool>("hideOnLogin", default: false)
@@ -21,15 +20,17 @@ extension Defaults.Keys {
     static let isShortcutSet: Defaults.Key<Bool> = Key<Bool>("isShortcutSet", default: false)
 }
 
-extension KeyboardShortcuts.Name {
-    static let toggleMenuItems = Self("toggleMenuItems")
+struct UserDefaultKeys {
+    struct Shortcuts {
+        static let ToggleMenuItems: String = "toggleMenuItems"
+    }
 }
 
 extension NSStoryboard.Name {
     static let preferences: NSStoryboard.Name = NSStoryboard.Name("Preferences")
 }
 
-extension Settings.PaneIdentifier {
+extension Preferences.PaneIdentifier {
     static let dozer = Self("dozer")
     static let general = Self("general")
 }

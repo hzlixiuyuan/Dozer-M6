@@ -3,22 +3,20 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import Cocoa
-import Settings
-import KeyboardShortcuts
+import Preferences
+import MASShortcut
 import LaunchAtLogin
 import Sparkle
 import Defaults
 
-final class General: NSViewController, SettingsPane {
-    let paneIdentifier = Settings.PaneIdentifier.general
-    let paneTitle: String = "General"
+final class General: NSViewController, PreferencePane {
+    let preferencePaneIdentifier = Preferences.PaneIdentifier.general
+    let preferencePaneTitle: String = "General"
     let toolbarItemIcon = NSImage(named: NSImage.preferencesGeneralName)!
 
     override var nibName: NSNib.Name? { "General" }
 
-    private var updater: SPUUpdater? {
-        (NSApp.delegate as? AppDelegate)?.updaterController.updater
-    }
+    fileprivate var userShortCut: MASShortcut!
 
     @IBOutlet private var LaunchAtLoginCheckbox: NSButton!
     @IBOutlet private var CheckForUpdatesCheckbox: NSButton!
@@ -30,7 +28,7 @@ final class General: NSViewController, SettingsPane {
     @IBOutlet private var ShowIconAndMenuCheckbox: NSButton!
     @IBOutlet private var FontSizePopUpButton: NSPopUpButton!
     @IBOutlet private var ButtonPaddingPopUpButton: NSPopUpButton!
-    @IBOutlet private var ToggleMenuItemsView: NSView!
+    @IBOutlet private var ToggleMenuItemsView: MASShortcutView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,8 +36,8 @@ final class General: NSViewController, SettingsPane {
         LaunchAtLoginCheckbox.focusRingType = .none
 
         LaunchAtLoginCheckbox.isChecked = LaunchAtLogin.isEnabled
-        if let updater = updater {
-            CheckForUpdatesCheckbox.isChecked = updater.automaticallyChecksForUpdates
+        if SUUpdater.shared() != nil {
+            CheckForUpdatesCheckbox.isChecked = SUUpdater.shared()!.automaticallyChecksForUpdates
         } else {
             CheckForUpdatesCheckbox.isChecked = false
         }
@@ -53,15 +51,14 @@ final class General: NSViewController, SettingsPane {
         FontSizePopUpButton.selectItem(withTitle: "\(Int(Defaults[.iconSize])) px")
         ButtonPaddingPopUpButton.selectItem(withTitle: "\(Int(Defaults[.buttonPadding])) px")
 
-        // Host the KeyboardShortcuts recorder inside the container view from the XIB.
-        // RecorderCocoa cannot be loaded from a nib, so it is created programmatically.
-        let recorder = KeyboardShortcuts.RecorderCocoa(for: .toggleMenuItems) { [weak self] _ in
-            self?.configureEnabledNoIconCheckbox()
-        }
-        recorder.frame = ToggleMenuItemsView.bounds
-        recorder.autoresizingMask = [.width, .height]
-        ToggleMenuItemsView.addSubview(recorder)
+        ToggleMenuItemsView.associatedUserDefaultsKey = UserDefaultKeys.Shortcuts.ToggleMenuItems
+        view.addSubview(ToggleMenuItemsView)
         configureEnabledNoIconCheckbox()
+
+        ToggleMenuItemsView.shortcutValueChange = { _ -> Void in
+            self.userShortCut = self.ToggleMenuItemsView.shortcutValue
+            self.configureEnabledNoIconCheckbox()
+        }
     }
 
     @IBAction private func launchAtLoginClicked(_ sender: NSButton) {
@@ -69,11 +66,11 @@ final class General: NSViewController, SettingsPane {
     }
 
     @IBAction private func automaticallyCheckForUpdatesClicked(_ sender: NSButton) {
-        guard let updater = updater else {
+        guard SUUpdater.shared() != nil else {
             CheckForUpdatesCheckbox.isChecked = false
             return
         }
-        updater.automaticallyChecksForUpdates = CheckForUpdatesCheckbox.isChecked
+        SUUpdater.shared()!.automaticallyChecksForUpdates = CheckForUpdatesCheckbox.isChecked
     }
 
     @IBAction private func hideStatusBarIconsAtLaunchClicked(_ sender: NSButton) {
@@ -111,7 +108,7 @@ final class General: NSViewController, SettingsPane {
 
     /// disables the noIcon-checkbox if no shortcut is set and keeps track whether shortcut is set
     private func configureEnabledNoIconCheckbox() {
-        if KeyboardShortcuts.getShortcut(for: .toggleMenuItems) == nil {
+        if ToggleMenuItemsView.shortcutValue == nil {
             HideBothDozerIconsCheckbox.isEnabled = false
             Defaults[.isShortcutSet] = false
         } else {
