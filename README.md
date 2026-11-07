@@ -18,6 +18,21 @@
 - Apple Silicon（arm64）或 Intel（x86_64）均可
 - **必须安装到 `/Applications`**，并授予辅助功能权限
 
+## 📦 直接下载（不用装 Xcode）
+
+到 [Releases](https://github.com/hzlixiuyuan/Dozer-M6/releases) 找到标记为
+**Pre-release（预发布）**、tag 名含 `macos27` 的版本，下载 `Dozer-universal.zip`
+（或 `.dmg`），解压后把 `Dozer.app` 拖进 `/Applications`。
+
+> 两个分支的产物文件名相同，请按 Release 的 tag 区分：`build-1-main` 是通用稳定版，
+> tag 含 `macos27` 的才是本分支的 macOS 27 兼容版。
+> 安装包由 GitHub Actions 云端编译，含 `arm64 + x86_64`；使用 **ad-hoc 签名、未公证**，
+> 首次打开若被拦截，右键 App →「打开」或执行
+> `xattr -d com.apple.quarantine /Applications/Dozer.app`。
+> 首次隐藏图标时还需在「系统设置 → 隐私与安全性 → 辅助功能」中勾选 Dozer。
+
+想自己改代码或重新构建，再看下面的源码构建。
+
 ## 快速开始
 
 ```bash
