@@ -1,5 +1,5 @@
 if which swiftlint >/dev/null; then
   swiftlint
 else
-  echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
+  echo "警告：未安装 SwiftLint，请从 https://github.com/realm/SwiftLint 下载"
 fi
