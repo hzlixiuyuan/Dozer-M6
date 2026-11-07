@@ -1,0 +1,116 @@
+name: 构建并发布 Dozer 安装包
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish_release:
+        description: '是否同时发布到 Releases（关闭则只保留构建产物）'
+        type: boolean
+        default: true
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: 编译 universal (arm64 + x86_64)
+    runs-on: macos-26
+    timeout-minutes: 60
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 环境信息
+        run: |
+          sw_vers
+          uname -m
+          xcode-select -p
+          xcodebuild -version
+          brew --prefix
+
+      - name: 安装构建工具
+        run: brew bundle --no-upgrade
+
+      # make prepare 会按各自分支执行正确的依赖准备：
+      # main 走 SwiftGen + XcodeGen，macos27 还会跑 Carthage/Sparkle 的 Bootstrap.sh
+      - name: 准备工程与依赖
+        run: make prepare
+
+      - name: 解析 Swift 包依赖
+        run: |
+          if [ -f Dozer.xcodeproj/project.pbxproj ]; then
+            xcodebuild -resolvePackageDependencies -project Dozer.xcodeproj -scheme Dozer || true
+          fi
+
+      - name: 编译 Release
+        run: make app
+
+      - name: 验证架构
+        run: |
+          BIN="build/Build/Products/Release/Dozer.app/Contents/MacOS/Dozer"
+          lipo -info "$BIN"
+          lipo -info "$BIN" | grep -q "arm64"
+          lipo -info "$BIN" | grep -q "x86_64"
+          echo "架构校验通过：arm64 + x86_64"
+
+      - name: 重新签名并打包
+        run: |
+          set -e
+          APP="build/Build/Products/Release/Dozer.app"
+          codesign --force --deep --sign - "$APP"
+          mkdir -p dist staging
+          cp -R "$APP" staging/Dozer.app
+          ln -s /Applications staging/Applications
+          (cd staging && ditto -c -k --sequesterRsrc --keepParent Dozer.app ../dist/Dozer-universal.zip)
+          hdiutil create -volname Dozer -srcfolder staging -ov -format UDZO dist/Dozer-universal.dmg
+          (cd dist && shasum -a 256 Dozer-universal.zip Dozer-universal.dmg > SHA256SUMS.txt)
+          ls -lh dist
+
+      - name: 生成发布说明
+        run: |
+          cat > dist/RELEASE_NOTES.md <<'EOF'
+          ## Dozer · Apple Silicon 原生版（GitHub Actions 自动构建）
+
+          - 架构：arm64 + x86_64 通用二进制，M1 ~ M6 原生运行，无需 Rosetta 2
+          - 签名：ad-hoc 临时签名，**未做 Developer ID 签名与公证**
+
+          ### 安装
+
+          1. 下载 `Dozer-universal.zip`（或 `.dmg`），解压后把 `Dozer.app` 拖进「应用程序」
+          2. 首次打开若提示「无法验证开发者」，右键 App → 「打开」；或在终端执行
+             `xattr -d com.apple.quarantine /Applications/Dozer.app`
+          3. 右键菜单栏的 Dozer 图标可打开设置；按住 ⌘ 拖动可排列菜单栏图标
+
+          `macos27` 分支构建的版本还需在「系统设置 → 隐私与安全性 → 辅助功能」中授权，
+          且必须放在 `/Applications`。
+
+          `SHA256SUMS.txt` 可用于校验下载完整性。
+          EOF
+
+      - name: 上传构建产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: Dozer-${{ github.ref_name }}-${{ github.run_number }}
+          path: dist/
+          retention-days: 90
+
+      - name: 发布到 Releases
+        if: ${{ github.event_name == 'push' || inputs.publish_release }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            TAG="build-${GITHUB_RUN_NUMBER}-${GITHUB_REF_NAME}"
+          else
+            TAG="$GITHUB_REF_NAME"
+          fi
+          gh release create "$TAG" \
+            dist/Dozer-universal.zip \
+            dist/Dozer-universal.dmg \
+            dist/SHA256SUMS.txt \
+            --title "Dozer 通用版 · ${GITHUB_REF_NAME} · 自动构建 #${GITHUB_RUN_NUMBER}" \
+            --notes-file dist/RELEASE_NOTES.md
