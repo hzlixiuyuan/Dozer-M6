@@ -1,0 +1,14 @@
+build/
+.build/
+Releases/
+Dozer.xcodeproj/
+Credentials/
+
+# Fastlane
+fastlane/
+fastlaneLegacy/
+Gemfile
+Gemfile.lock
+
+# Swiftgen
+Dozer/Other/Generated/
