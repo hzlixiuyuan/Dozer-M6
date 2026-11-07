@@ -32,6 +32,18 @@
 > Build the universal **arm64 + x86_64** app from source instead — see the
 > **macOS 27 fork** section below. It runs natively on every M-series Mac (M1 ... M6).
 
+Quick start after cloning — run in the repository root:
+
+```shell
+bash build.sh   # installs tools, builds Dozer.app, verifies arm64 + x86_64
+```
+
+Branches: `macos27` (this branch) adds the macOS 27 menu-bar fix and needs
+Accessibility permission plus installation in `/Applications`; `main` is the
+universal build for macOS 11–26 (`git checkout main`).
+
+Or build manually:
+
 ```shell
 make app      # build build/Build/Products/Release/Dozer.app (ad-hoc signed)
 make verify   # confirm the binary contains arm64
