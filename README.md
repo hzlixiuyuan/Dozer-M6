@@ -34,6 +34,17 @@
 
 Requirements: macOS 11+ (Big Sur), Xcode 26, Homebrew.
 
+Quick start after cloning — run in the repository root:
+
+```shell
+bash build.sh   # installs tools, builds Dozer.app, verifies arm64 + x86_64
+```
+
+Branches: `main` (this branch) targets macOS 11–26; `macos27` adds the macOS 27
+menu-bar compatibility fix — switch with `git checkout macos27`.
+
+Or build manually:
+
 ```shell
 make app      # builds Dozer.app into build/Build/Products/Release/ (ad-hoc signed)
 make verify   # prints architectures; must show "arm64 x86_64"
