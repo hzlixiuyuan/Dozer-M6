@@ -19,6 +19,19 @@
 
 > 本工程使用的隐藏方式依赖旧版状态栏图标机制。macOS 27 及更高版本请改用 [`macos27` 分支](#分支怎么选)。
 
+## 📦 直接下载（不用装 Xcode）
+
+到 [Releases](https://github.com/hzlixiuyuan/Dozer-M6/releases) 下载最新的
+`Dozer-universal.zip`（或 `.dmg`），解压后把 `Dozer.app` 拖进「应用程序」即可。
+
+> 安装包由 GitHub Actions 在 macOS arm64 云端编译，含 `arm64 + x86_64` 通用二进制。
+> 使用 **ad-hoc 签名、未做 Developer ID 签名与公证**，首次打开若提示「无法验证开发者」，
+> 请右键 App →「打开」，或在终端执行
+> `xattr -d com.apple.quarantine /Applications/Dozer.app`。
+> `SHA256SUMS.txt` 可校验下载完整性；`macos27` 对应的版本标记为预发布。
+
+想自己改代码或重新构建，再看下面的源码构建。
+
 ## 快速开始
 
 ```bash
