@@ -47,9 +47,9 @@ final class General: NSViewController, PreferencePane {
         HideBothDozerIconsCheckbox.isChecked = Defaults[.noIconMode]
         EnableRemoveDozerIconCheckbox.isChecked = Defaults[.removeDozerIconEnabled]
         ShowIconAndMenuCheckbox.isChecked = Defaults[.showIconAndMenuEnabled]
-        HideStatusBarIconsSecondsPopUpButton.selectItem(withTitle: "\(Int(Defaults[.hideAfterDelay])) seconds")
-        FontSizePopUpButton.selectItem(withTitle: "\(Int(Defaults[.iconSize])) px")
-        ButtonPaddingPopUpButton.selectItem(withTitle: "\(Int(Defaults[.buttonPadding])) px")
+        HideStatusBarIconsSecondsPopUpButton.selectItem(withTitle: "\(Int(Defaults[.hideAfterDelay])) 秒")
+        FontSizePopUpButton.selectItem(withTitle: "\(Int(Defaults[.iconSize])) 像素")
+        ButtonPaddingPopUpButton.selectItem(withTitle: "\(Int(Defaults[.buttonPadding])) 像素")
 
         ToggleMenuItemsView.associatedUserDefaultsKey = UserDefaultKeys.Shortcuts.ToggleMenuItems
         view.addSubview(ToggleMenuItemsView)

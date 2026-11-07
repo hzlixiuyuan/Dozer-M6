@@ -30,7 +30,7 @@
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="29f-2D-VsY">
                     <rect key="frame" x="18" y="379" width="361" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Launch at login" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="qB0-b5-ye2">
+                    <buttonCell key="cell" type="check" title="登录时启动" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="qB0-b5-ye2">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -41,7 +41,7 @@
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="htn-2c-54s">
                     <rect key="frame" x="18" y="351" width="361" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Automatically check for updates" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="3Mj-bx-k9f">
+                    <buttonCell key="cell" type="check" title="自动检查更新" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="3Mj-bx-k9f">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -56,7 +56,7 @@
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="phN-BY-WEC">
                     <rect key="frame" x="18" y="313" width="357" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Hide menu bar icons at launch" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="24v-K4-mhc">
+                    <buttonCell key="cell" type="check" title="启动时隐藏菜单栏图标" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="24v-K4-mhc">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -67,7 +67,7 @@
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hOy-nu-Sy0">
                     <rect key="frame" x="18" y="283" width="179" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Hide menu bar icons after" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="hS1-gl-Pc1">
+                    <buttonCell key="cell" type="check" title="在下列时间后隐藏菜单栏图标" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="hS1-gl-Pc1">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -78,17 +78,17 @@
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ziw-so-qpj" userLabel="10 seconds">
                     <rect key="frame" x="197" y="279" width="114" height="25"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <popUpButtonCell key="cell" type="push" title="10 seconds" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="10" imageScaling="proportionallyDown" inset="2" selectedItem="OdJ-mZ-u0T" id="JbX-Xw-iVE" userLabel="10 seconds">
+                    <popUpButtonCell key="cell" type="push" title="10 秒" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="10" imageScaling="proportionallyDown" inset="2" selectedItem="OdJ-mZ-u0T" id="JbX-Xw-iVE" userLabel="10 seconds">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
                         <menu key="menu" id="fJp-Cl-42M">
                             <items>
-                                <menuItem title="30 seconds" tag="30" id="dAj-2T-ECp"/>
-                                <menuItem title="20 seconds" tag="20" id="tfP-VF-MG8"/>
-                                <menuItem title="15 seconds" tag="15" id="EK8-vh-0H9"/>
-                                <menuItem title="10 seconds" state="on" tag="10" id="OdJ-mZ-u0T"/>
-                                <menuItem title="5 seconds" tag="5" id="Uqk-BC-hfK"/>
-                                <menuItem title="3 seconds" tag="3" id="ven-uH-a0W"/>
+                                <menuItem title="30 秒" tag="30" id="dAj-2T-ECp"/>
+                                <menuItem title="20 秒" tag="20" id="tfP-VF-MG8"/>
+                                <menuItem title="15 秒" tag="15" id="EK8-vh-0H9"/>
+                                <menuItem title="10 秒" state="on" tag="10" id="OdJ-mZ-u0T"/>
+                                <menuItem title="5 秒" tag="5" id="Uqk-BC-hfK"/>
+                                <menuItem title="3 秒" tag="3" id="ven-uH-a0W"/>
                             </items>
                         </menu>
                     </popUpButtonCell>
@@ -99,7 +99,7 @@
                 <textField horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CNz-dE-9vs">
                     <rect key="frame" x="36" y="267" width="349" height="13"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="The delay resets when you interact with the menu bar." id="QoH-wj-4Bo">
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="操作菜单栏时，倒计时会重新计时。" id="QoH-wj-4Bo">
                         <font key="font" metaFont="system" size="10"/>
                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -108,7 +108,7 @@
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="w7z-Qa-kqw">
 	            <rect key="frame" x="18" y="240" width="357" height="18"/>
 	            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-	            <buttonCell key="cell" type="check" title="Hide both Dozer icons when menu bar icons are hidden" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="PrK-hp-6i2">
+	            <buttonCell key="cell" type="check" title="隐藏菜单栏图标时，同时隐藏两个 Dozer 图标" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="PrK-hp-6i2">
 		            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
 	            </buttonCell>
 	            <connections>
@@ -118,7 +118,7 @@
                 <textField horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yjj-cw-XAs">
                     <rect key="frame" x="36" y="224" width="349" height="13"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Use the shortcut to show the menu bar icons." id="vbw-Q7-ecG">
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="使用快捷键显示菜单栏图标。" id="vbw-Q7-ecG">
                         <font key="font" metaFont="system" size="10"/>
                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -127,7 +127,7 @@
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pDX-1f-4hl">
                     <rect key="frame" x="18" y="197" width="361" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Enable 'remove' Dozer icon" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Toa-to-mCu">
+                    <buttonCell key="cell" type="check" title="启用「移除」Dozer 图标" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Toa-to-mCu">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -138,7 +138,7 @@
                 <textField horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IDw-Ag-Gcv">
                     <rect key="frame" x="36" y="168" width="349" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Enable additional Dozer icon. Show/hide less frequently used menu bar icons using option+click." id="UjO-Yp-XO4">
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="启用额外的 Dozer 图标：按住 Option 点击，可显示/隐藏较少使用的菜单栏图标。" id="UjO-Yp-XO4">
                         <font key="font" metaFont="system" size="10"/>
                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -147,7 +147,7 @@
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oAW-Yf-7fi">
                     <rect key="frame" x="18" y="140" width="352" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Use full width of screen when showing menu bar icons" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="BFd-a4-rMo">
+                    <buttonCell key="cell" type="check" title="显示菜单栏图标时使用整个屏幕宽度" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="BFd-a4-rMo">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -158,7 +158,7 @@
                 <textField horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kyk-ok-xNW">
                     <rect key="frame" x="36" y="124" width="330" height="13"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Temporarily replaces Application menu and shows Dozer dock icon." id="ETO-zu-yhS">
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="临时替换应用菜单，并显示 Dozer 的程序坞图标。" id="ETO-zu-yhS">
                         <font key="font" metaFont="system" size="10"/>
                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -171,18 +171,18 @@
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Lku-wR-aPA">
                     <rect key="frame" x="18" y="82" width="76" height="25"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <popUpButtonCell key="cell" type="push" title="10 px" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="10" imageScaling="proportionallyDown" inset="2" selectedItem="K1H-GX-dgi" id="dMj-ju-7Q7">
+                    <popUpButtonCell key="cell" type="push" title="10 像素" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="10" imageScaling="proportionallyDown" inset="2" selectedItem="K1H-GX-dgi" id="dMj-ju-7Q7">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
                         <menu key="menu" id="Ve7-Ni-pIE">
                             <items>
-                                <menuItem title="10 px" state="on" tag="10" id="K1H-GX-dgi"/>
-                                <menuItem title="9 px" tag="9" id="MjK-xE-xDS"/>
-                                <menuItem title="8 px" tag="8" id="Tbm-iD-LcT"/>
-                                <menuItem title="7 px" tag="7" id="As9-yv-ClQ"/>
-                                <menuItem title="6 px" tag="6" id="QkM-lb-TEG"/>
-                                <menuItem title="5 px" tag="5" id="eXo-xP-6N7"/>
-                                <menuItem title="4 px" tag="4" id="LhP-q9-3yU"/>
+                                <menuItem title="10 像素" state="on" tag="10" id="K1H-GX-dgi"/>
+                                <menuItem title="9 像素" tag="9" id="MjK-xE-xDS"/>
+                                <menuItem title="8 像素" tag="8" id="Tbm-iD-LcT"/>
+                                <menuItem title="7 像素" tag="7" id="As9-yv-ClQ"/>
+                                <menuItem title="6 像素" tag="6" id="QkM-lb-TEG"/>
+                                <menuItem title="5 像素" tag="5" id="eXo-xP-6N7"/>
+                                <menuItem title="4 像素" tag="4" id="LhP-q9-3yU"/>
                             </items>
                         </menu>
                     </popUpButtonCell>
@@ -193,7 +193,7 @@
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TmQ-WL-Cmf">
                     <rect key="frame" x="95" y="88" width="150" height="16"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <textFieldCell key="cell" lineBreakMode="clipping" title="Font size of Dozer icons" id="lI8-BD-YX6">
+                    <textFieldCell key="cell" lineBreakMode="clipping" title="Dozer 图标大小" id="lI8-BD-YX6">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -202,18 +202,18 @@
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="D1W-S4-kqi">
                     <rect key="frame" x="18" y="52" width="76" height="25"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <popUpButtonCell key="cell" type="push" title="40 px" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="40" imageScaling="proportionallyDown" inset="2" selectedItem="nEF-ne-Uur" id="4qm-Fp-7BG">
+                    <popUpButtonCell key="cell" type="push" title="40 像素" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="40" imageScaling="proportionallyDown" inset="2" selectedItem="nEF-ne-Uur" id="4qm-Fp-7BG">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
                         <menu key="menu" id="PKu-6K-JrX">
                             <items>
-                                <menuItem title="40 px" state="on" tag="40" id="nEF-ne-Uur"/>
-                                <menuItem title="35 px" tag="35" id="MuZ-9R-GNV"/>
-                                <menuItem title="30 px" tag="30" id="RRq-eq-zCw"/>
-                                <menuItem title="25 px" tag="25" id="j6J-tT-q5c"/>
-                                <menuItem title="20 px" tag="20" id="CSv-Pn-4v4"/>
-                                <menuItem title="15 px" tag="15" id="SEt-aL-AMP"/>
-                                <menuItem title="10 px" tag="10" id="xkS-gq-5Cm"/>
+                                <menuItem title="40 像素" state="on" tag="40" id="nEF-ne-Uur"/>
+                                <menuItem title="35 像素" tag="35" id="MuZ-9R-GNV"/>
+                                <menuItem title="30 像素" tag="30" id="RRq-eq-zCw"/>
+                                <menuItem title="25 像素" tag="25" id="j6J-tT-q5c"/>
+                                <menuItem title="20 像素" tag="20" id="CSv-Pn-4v4"/>
+                                <menuItem title="15 像素" tag="15" id="SEt-aL-AMP"/>
+                                <menuItem title="10 像素" tag="10" id="xkS-gq-5Cm"/>
                             </items>
                         </menu>
                     </popUpButtonCell>
@@ -224,7 +224,7 @@
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tB7-K2-Gts">
                     <rect key="frame" x="95" y="58" width="131" height="16"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <textFieldCell key="cell" lineBreakMode="clipping" title="Width of Dozer icons" id="y67-Ov-Fvx">
+                    <textFieldCell key="cell" lineBreakMode="clipping" title="Dozer 图标宽度" id="y67-Ov-Fvx">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -241,7 +241,7 @@
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nmU-jA-Ht8">
                     <rect key="frame" x="130" y="17" width="249" height="17"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <textFieldCell key="cell" lineBreakMode="clipping" alignment="left" title="Show/hide menu bar icons" id="HZP-sl-H5I">
+                    <textFieldCell key="cell" lineBreakMode="clipping" alignment="left" title="显示/隐藏菜单栏图标" id="HZP-sl-H5I">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>

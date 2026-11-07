@@ -1,120 +1,98 @@
-<p align="center">
-	<img width="200" height="200" margin-right="100%" src="https://raw.githubusercontent.com/Mortennn/Dozer/master/Stuff/AppIcon.png">
-</p>
-<p align="center">Hide menu bar icons to give your Mac a cleaner look.</p>
-<p align="center">
-	<a href="https://github.com/Mortennn/Dozer/releases/latest">
- 		<img src="https://img.shields.io/badge/download-latest-brightgreen.svg" alt="download">
-	<a href="https://img.shields.io/badge/platform-macOS-lightgrey.svg">
- 		<img src="https://img.shields.io/badge/platform-macOS-lightgrey.svg" alt="platform">
-	</a>
-	<a href="https://img.shields.io/badge/requirements-macOS High Sierra+-ff69b4.svg">
- 		<img src="https://img.shields.io/badge/requirements-macOS High Sierra+-lightgrey.svg" alt="systemrequirements">
-	</a>
-	<a href="https://github.com/sindresorhus/swiftlint-sindre">
- 		<img src="https://img.shields.io/badge/SwiftLint-Sindre-hotpink.svg" alt="swiftlint">
-	</a>
-	<a href="https://opensource.org/licenses/MPL-2.0">
- 		<img src="https://img.shields.io/badge/License-MPL%202.0-orange.svg" alt="license">
-	</a>
-</p>
-<p align="center">
-	<img height="100" min-width="100" src="https://github.com/Mortennn/Dozer/raw/master/Stuff/demo.gif" alt="demo">
-</p>
+<div align="center">
+  <img src="https://raw.githubusercontent.com/Mortennn/Dozer/master/Stuff/AppIcon.png" width="200" height="200" alt="Dozer 图标">
+  <p><strong>隐藏 macOS 菜单栏图标，让屏幕更清爽。</strong></p>
+  <p>Apple Silicon 原生版 · arm64 + x86_64 通用二进制 · macOS 27 兼容分支</p>
+  <img src="https://github.com/Mortennn/Dozer/raw/master/Stuff/demo.gif" height="100" alt="使用演示">
+</div>
 
-<p align="center"></p>
-<a href="https://www.buymeacoffee.com/mortennn" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
+## 这是什么
 
-## ⚙️ Install / Build
+本项目基于上游 [Mortennn/Dozer](https://github.com/Mortennn/Dozer) 改造，目标是让 Dozer 在 M 系列 Mac 上**原生运行**，并修复 macOS 27 新菜单栏带来的兼容问题。
 
-> The Homebrew cask `dozer` was disabled in Dec 2024 and removed in Dec 2025, and the
-> published DMG (v4.0.0, 2019) is an **Intel-only x86_64** binary that needs Rosetta 2.
-> Build the universal **arm64 + x86_64** app from source instead — see the
-> **macOS 27 fork** section below. It runs natively on every M-series Mac (M1 ... M6).
+> 原版正式发布包 v4.0.0（2019 年）是纯 Intel `x86_64` 二进制，在 Apple Silicon 上只能靠 Rosetta 2 转译；Homebrew 的 `dozer` cask 已于 2024 年 12 月禁用、2025 年 12 月下架。本仓库改为从源码构建 `arm64 + x86_64` 通用二进制，M1 到 M6 全部原生运行。
 
-Quick start after cloning — run in the repository root:
+## 系统要求
 
-```shell
-bash build.sh   # installs tools, builds Dozer.app, verifies arm64 + x86_64
+- macOS 27 及以上（工程编译目标仍为 macOS 10.13，兼容路径在 27+ 才启用）
+- Xcode 26、Homebrew
+- Apple Silicon（arm64）或 Intel（x86_64）均可
+- **必须安装到 `/Applications`**，并授予辅助功能权限
+
+## 快速开始
+
+```bash
+git clone https://github.com/hzlixiuyuan/Dozer-M6.git
+cd Dozer-M6
+git checkout macos27
+bash build.sh
 ```
 
-Branches: `macos27` (this branch) adds the macOS 27 menu-bar fix and needs
-Accessibility permission plus installation in `/Applications`; `main` is the
-universal build for macOS 11–26 (`git checkout main`).
+脚本会自动检查 macOS / Xcode / Homebrew → 安装依赖 → 编译 Release → 用 `lipo -info` 验证架构。看到 `arm64 x86_64` 就说明是原生二进制。
 
-Or build manually:
-
-```shell
-make app      # build build/Build/Products/Release/Dozer.app (ad-hoc signed)
-make verify   # confirm the binary contains arm64
+```bash
+cp -R build/Build/Products/Release/Dozer.app /Applications/
+open -a Dozer
 ```
 
-## ⚫️ Dozer Icons
+首次隐藏时，请在 **系统设置 → 隐私与安全性 → 辅助功能** 中勾选 Dozer，然后再点一次图标。图标排列方式见下方「使用方法」。
 
-There are 2 or 3, numbered from right to left:
+## 分支怎么选
 
-1. this can be positioned anywhere you prefer, it is only a point of interaction
-2. this and everything to its left will be hidden/shown by clicking any Dozer icon
-3. (Optional) the "remove" icon and everything to its left will be hidden/shown by option-clicking any Dozer icon
+| 分支 | 适用系统 | 说明 |
+|---|---|---|
+| `main`（默认） | macOS 11 ~ 26 | 通用版，日常使用选这个 |
+| `macos27`（本分支） | macOS 27 及以上 | 修复新版菜单栏导致隐藏失效的问题 |
 
-## 👨‍💻 Usage
+切回通用版：`git checkout main`
 
-* Move the icons you want to hide until clicked to the left of the second Dozer icon
-* Move the icons you want to hide until option-clicked to the left of the third Dozer icon
+## 手动构建
 
-**N.B. hold command (`⌘`) then drag to move the menu bar icons.**
-
-## 👇 Interactions
-* Left-click one of the Dozer icons to hide/show the first group of menu bar icons
-* Option-Left-click one of the Dozer icons to show the second group of menu bar icons (optional)
-* Right-click one of the Dozer icons to open the settings
-
-<!-- GIF is commented out until it is redone -->
-<!-- **Checkout [this GIF](https://raw.githubusercontent.com/Mortennn/Dozer/master/Stuff/demo.gif) to watch Dozer in action.** -->
-
-## 📄 Requirements
-macOS 11+ recommended (the upstream target is 10.13), Apple Silicon (arm64) or
-Intel (x86_64) — universal binary. On macOS 27+, the compatibility path below
-requires Accessibility permission and installation in `/Applications`.
-
-## macOS 27 fork
-
-The `macOS-27` branch adds an experimental compatibility path for macOS 27.
-Apple's new menu bar discards Dozer's oversized separator instead of hiding
-the icons to its left. This branch uses the system's menu bar visibility service
-on macOS 27, and retains the original mechanism on earlier releases.
-
-Build a local Apple Silicon + Intel app with Xcode and Homebrew installed:
-
-```shell
-brew install carthage xcodegen swiftgen swiftlint
-make app
+```bash
+make app       # 命令行编译 Release 版（ad-hoc 临时签名）
+make verify    # 验证二进制架构
+make test      # 运行分类、取消、权限错误与恢复的单元测试
 ```
 
-The app is at `build/Build/Products/Release/Dozer.app`. Quit the previous Dozer,
-copy this build to `/Applications/Dozer.app`, and launch it from there.
-On the first hide, allow Dozer in **System Settings → Privacy & Security →
-Accessibility**, then click the dot again. Arrange the icons with ⌘-drag as
-described above; the left Dozer dot remains the normal hiding boundary.
+`make app` 使用 ad-hoc 临时签名，**仅供本机使用**。要分发给他人需要 Developer ID 签名与公证；重新构建后可能要再次授予辅助功能权限。
 
-macOS 27 limitations:
+## macOS 27 兼容说明
 
-- Visibility is controlled per application. If an app has icons on both sides
-  of a separator, its most visible placement wins and its icons stay together.
-- macOS keeps core system controls, including Control Center, Wi-Fi and the clock, visible.
-- This uses the private `MenuBarClientCore` framework, following
-  [Hidden Bar's macOS 27 implementation](https://github.com/dwarvesf/hidden/releases/tag/v1.11.1).
-  An OS update may change it. If it is unavailable or a request fails, Dozer
-  restores the icons and explains the problem.
-- Place the app in `/Applications` before using it. The system must resolve
-  Dozer's bundle identifier to keep its toggle visible.
-- This locally signed build is intended for personal use. A distributed release
-  still needs Developer ID signing and notarization. Rebuilding may require
-  granting Accessibility again.
-- Layout is read while all sections are visible. After rearranging icons with
-  the optional remove section active, Option-click to show all sections before
-  collapsing again. Apps launched while collapsed may appear after the next expand.
+Apple 在 macOS 27 中重做了菜单栏：它会直接丢弃 Dozer 用来占位的超宽分隔项，而不是把它左侧的图标一起隐藏，因此原版的隐藏逻辑失效。本分支在 macOS 27 上改用系统的菜单栏可见性服务来控制图标，在更早的系统上仍保留原有机制。
 
-Run `make test` after the initial build to check classification, cancellation,
-permission errors, and restoration. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
-for the license of the adapted visibility bridge and Accessibility inventory.
+已知限制：
+
+- 可见性按**应用**控制。若某个应用的图标分布在分隔线两侧，以最可见的一侧为准，且该应用的图标会保持在一起
+- 系统核心控件（控制中心、Wi-Fi、时钟等）始终保持可见，无法隐藏
+- 该方案使用私有框架 `MenuBarClientCore`，参考了 [Hidden Bar 的 macOS 27 实现](https://github.com/dwarvesf/hidden/releases/tag/v1.11.1)。系统更新可能导致其失效；若服务不可用或请求失败，Dozer 会恢复所有图标并给出提示
+- 必须放在 `/Applications`，系统需要能解析 Dozer 的 bundle identifier 才能保持切换按钮可见
+- 布局在**所有分区都可见时**读取。若启用了可选的「移除」分区，调整图标后请先 Option 点击展开全部，再重新收起；在收起状态下启动的应用，可能要等下一次展开才会出现
+- 相关许可见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
+
+## Dozer 的三个图标
+
+从右往左数，共 2 或 3 个：
+
+1. 第一个：可放在任意位置，仅作为点击交互点
+2. 第二个：点击 Dozer 图标时，它及其左侧所有图标一起隐藏 / 显示
+3. 第三个（可选）：「移除」图标，按住 Option 点击时可控制它及其左侧图标
+
+## 使用方法
+
+- 把想「点击后隐藏」的图标拖到第二个 Dozer 图标左边
+- 把想「Option 点击后隐藏」的图标拖到第三个 Dozer 图标左边
+- **按住 ⌘ 拖动**才能移动菜单栏图标
+- 左键点击 Dozer 图标：隐藏 / 显示第一组图标
+- Option + 左键：显示第二组图标（可选）
+- 右键点击：打开设置
+
+> 设置窗口、菜单项和构建脚本提示均已汉化。
+
+## 文档说明
+
+- `README.en.md`：本页的英文原文备份
+- `CHANGELOG.md`、`CONTRIBUTING.md`、`THIRD_PARTY_NOTICES.md`：沿用上游英文原文。它们分别是版本历史、贡献指南与第三方许可声明，翻译可能引入歧义，故保留原样
+- 代码中的标识符、`UserDefaults` 键与日志文本保持英文——修改这些会导致已保存的设置丢失或逻辑异常
+
+## 许可
+
+MPL 2.0，与上游一致。原作者 Mortennn。
