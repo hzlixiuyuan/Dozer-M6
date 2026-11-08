@@ -76,6 +76,8 @@ jobs:
           ## Dozer · Apple Silicon 原生版（GitHub Actions 自动构建）
 
           - 架构：arm64 + x86_64 通用二进制，M1 ~ M6 原生运行，无需 Rosetta 2
+          - 隐藏机制：运行时自动选择。macOS 26 及更早用传统长度挤压；macOS 27+ 自动改用
+            系统原生可见性限制（参考 Hidden Bar 的 macOS 27 适配）。**不用再按系统版本挑分支**
           - 签名：ad-hoc 临时签名，**未做 Developer ID 签名与公证**
 
           ### 安装
@@ -83,10 +85,13 @@ jobs:
           1. 下载 `Dozer-universal.zip`（或 `.dmg`），解压后把 `Dozer.app` 拖进「应用程序」
           2. 首次打开若提示「无法验证开发者」，右键 App → 「打开」；或在终端执行
              `xattr -d com.apple.quarantine /Applications/Dozer.app`
-          3. 右键菜单栏的 Dozer 图标可打开设置；按住 ⌘ 拖动可排列菜单栏图标
+          3. **按住 ⌘ 拖动**，把想隐藏的图标拖到左侧 Dozer 圆点的左边，然后点击圆点
+          4. macOS 27+ 首次使用还需在「系统设置 → 隐私与安全性 → 辅助功能」中允许 Dozer
 
-          `macos27` 分支构建的版本还需在「系统设置 → 隐私与安全性 → 辅助功能」中授权，
-          且必须放在 `/Applications`。
+          ### 点击后没有隐藏？
+
+          按 **Shift + 右键** 任一 Dozer 圆点打开诊断面板，可直接看到当前隐藏机制、权限状态、
+          可隐藏图标数量，并能临时切换机制排障。最常见原因是没有把图标拖到圆点左侧。
 
           `SHA256SUMS.txt` 可用于校验下载完整性。
           EOF
