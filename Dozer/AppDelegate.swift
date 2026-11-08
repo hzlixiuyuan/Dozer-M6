@@ -35,6 +35,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         _ = DozerIcons.toggleDockIcon(showIcon: false)
     }
 
+    /// 退出前释放原生可见性限制，否则系统会一直保留隐藏状态，
+    /// 直到进程被系统回收才恢复图标。
+    func applicationWillTerminate(_: Notification) {
+        DozerIcons.shared.restoreBeforeQuitting()
+    }
+
     // Show all Dozer icons when opening Dozer from Finder etc.
     func applicationOpenUntitledFile(_ sender: NSApplication) -> Bool {
         DozerIcons.shared.showAll()

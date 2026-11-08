@@ -24,6 +24,16 @@ class NormalStatusIcon: HelperstatusIcon {
             return
         }
 
+        // Shift + 右键：打开隐藏机制诊断，用于排查"点击后图标没有隐藏"。
+        if currentEvent.type == .rightMouseDown &&
+            currentEvent.modifierFlags.contains(.shift) &&
+            !currentEvent.modifierFlags.contains(.option) &&
+            !currentEvent.modifierFlags.contains(.control) &&
+            !currentEvent.modifierFlags.contains(.command) {
+            DozerIcons.shared.showDiagnostics()
+            return
+        }
+
         switch currentEvent.type {
         case .leftMouseDown:
             DozerIcons.shared.toggle()

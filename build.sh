@@ -27,11 +27,10 @@ branch=$(git branch --show-current 2>/dev/null || true)
 xcode_major=$(xcodebuild -version 2>/dev/null | head -1 | awk '{print $2}' | cut -d. -f1 || true)
 
 echo "系统：macOS $os_major | 分支：${branch:-未知}"
-if [ "$os_major" -ge 27 ] && [ "$branch" = "main" ]; then
-  echo "警告：macOS 27+ 的新菜单栏会让隐藏功能失效，建议先切分支：git checkout macos27"
-fi
-if [ "$os_major" -lt 27 ] && [ "$branch" = "macos27" ]; then
-  echo "提示：当前系统不需要 macOS 27 补丁，可用 git checkout main 使用通用版。"
+echo "本版本会在运行时自动选择隐藏机制，无需按系统版本切换分支。"
+if [ "$os_major" -ge 27 ]; then
+  echo "提示：macOS 27+ 会启用原生隐藏机制，首次使用需在"
+  echo "      系统设置 → 隐私与安全性 → 辅助功能 中允许 Dozer。"
 fi
 if [ -n "$xcode_major" ] && [ "$xcode_major" -lt 26 ]; then
   echo "警告：检测到 Xcode $xcode_major，工程按 Xcode 26 配置，建议升级后再构建。"
@@ -50,5 +49,5 @@ echo "构建完成：$built_app"
 echo "安装到应用程序："
 echo "  cp -R \"$built_app\" /Applications/ && open -a Dozer"
 echo ""
-echo "首次打开若被拦截：系统设置 → 隐私与安全性 → 仍要打开；"
-echo "macos27 分支还需在 系统设置 → 隐私与安全性 → 辅助功能 中勾选 Dozer，且必须装在 /Applications。"
+echo "首次打开若被拦截：系统设置 → 隐私与安全性 → 仍要打开。"
+echo "若点击后图标没有隐藏：先按住 ⌘ 把图标拖到圆点左边；再按 Shift + 右键圆点查看诊断。"

@@ -6,5 +6,7 @@
 #define bridging_header_h
 
 #import <Cocoa/Cocoa.h>
+// macOS 27 原生菜单栏可见性（运行时 dlopen 私有框架，旧系统自动降级）
+#import "../StatusIconClasses/NativeVisibilityBridge.h"
 
 #endif

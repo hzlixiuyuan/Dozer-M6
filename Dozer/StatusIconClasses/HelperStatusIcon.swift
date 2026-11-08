@@ -9,7 +9,13 @@ private struct StatusIconLength {
     static var show: CGFloat {
         Defaults[.buttonPadding]
     }
-    static let hide: CGFloat = 10_000
+    // 参考 Hidden Bar：折叠长度按最宽屏幕计算，而不是硬编码 10,000。
+    static var hide: CGFloat {
+        HideEngine.collapsedLength
+    }
+    // 展开态最多几十 pt，折叠态至少 500 pt，用阈值判断比精确相等更稳健
+    // （屏幕变化后折叠长度会被重算）。
+    static let collapsedThreshold: CGFloat = 400
 }
 
 class HelperstatusIcon {
@@ -33,14 +39,26 @@ class HelperstatusIcon {
     }
 
     deinit {
-        print("status item has been deallocated")
+        NSStatusBar.system.removeStatusItem(statusIcon)
     }
 
     func show() {
         statusIcon.length = StatusIconLength.show
+        if #available(macOS 27, *) {
+            statusIcon.isVisible = true
+        }
     }
 
     func hide() {
+        if #available(macOS 27, *) {
+            if HideEngine.current == .native {
+                // 其他应用的图标由 NativeMenuBarVisibility 通过系统可见性
+                // 限制隐藏；这里只需把 Dozer 自己的这个点移出菜单栏。
+                // macOS 27 会把过宽的 NSStatusItem 直接踢出布局，不能撑宽。
+                statusIcon.isVisible = false
+                return
+            }
+        }
         statusIcon.length = StatusIconLength.hide
     }
 
@@ -61,7 +79,8 @@ class HelperstatusIcon {
     }
 
     func setSize() {
-        if statusIcon.length != StatusIconLength.hide {
+        // 处于折叠状态时不要覆盖折叠长度。
+        if isShown {
             statusIcon.length = StatusIconLength.show
         }
         guard let statusIconButton = statusIcon.button else {
@@ -76,17 +95,31 @@ class HelperstatusIcon {
         statusIconButton.image = image
     }
 
+    /// 屏幕参数变化（外接显示器、分辨率调整）后重新应用折叠长度。
+    func reapplyIfCollapsed() {
+        guard !isShown else { return }
+        if #available(macOS 27, *) {
+            if HideEngine.current == .native { return }
+        }
+        statusIcon.length = StatusIconLength.hide
+    }
+
     func showRemoveIcons() {}
 
     @objc
     func statusIconClicked(_ sender: AnyObject?) {}
 
     var isShown: Bool {
-        statusIcon.length == StatusIconLength.show
+        if #available(macOS 27, *) {
+            if HideEngine.current == .native {
+                return statusIcon.isVisible
+            }
+        }
+        return statusIcon.length < StatusIconLength.collapsedThreshold
     }
 
     var isHidden: Bool {
-        statusIcon.length == StatusIconLength.hide
+        !isShown
     }
 
     var xPositionOnScreen: CGFloat {
