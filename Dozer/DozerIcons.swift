@@ -5,6 +5,9 @@
 import Cocoa
 import Defaults
 
+// DozerIcons 集中管理所有状态项以及两套隐藏引擎，类体超过 SwiftLint 的
+// 350 行上限。这里只对该类型局部豁免，不放宽整个工程的规范。
+// swiftlint:disable type_body_length
 public final class DozerIcons {
     static var shared = DozerIcons()
     private var dozerIcons: [HelperstatusIcon] = []
