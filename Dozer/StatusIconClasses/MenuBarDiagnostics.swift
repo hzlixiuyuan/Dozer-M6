@@ -64,6 +64,7 @@ final class MenuBarDiagnostics {
             "原生可见性服务：\(native ? "可用" : "不可用")",
             "辅助功能权限：\(accessibility ? "已授权" : "未授权")",
             "系统自带项：\(systemItemsText)",
+            "最近一次原生参数：\(NativeMenuBarVisibility.lastSummary)",
             "折叠长度：\(Int(HideEngine.collapsedLength)) pt（最宽屏幕 \(Int(widest)) pt）",
             "菜单栏状态项：检测到 \(windows.total) 个" + (separatorX == nil
                 ? "，圆点当前不可见，无法测量左侧数量（请先展开）"

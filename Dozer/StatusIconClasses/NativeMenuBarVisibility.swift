@@ -76,6 +76,9 @@ final class NativeMenuBarVisibility {
     private var generation = 0
     private var isApplying = false
     private(set) var requestedState = MenuBarVisibilityState.expanded
+    /// 最近一次原生隐藏实际交给系统的参数，供诊断面板展示：
+    /// 用户报「某项没隐藏」时，先看这里是不是那项根本不在这套清单里。
+    static private(set) var lastSummary = "尚未隐藏过（点击圆点后再看这里）"
 
     init(inventory: MenuBarInventoryProviding = MenuBarInventory(),
          service: MenuBarVisibilityProviding = NativeVisibilityService(),
@@ -156,7 +159,21 @@ final class NativeMenuBarVisibility {
             })
             // Preserve apps whose Accessibility data could not be read, along
             // with Dozer itself and every application in the visible section.
-            let allowed = Set(self.runningBundles()).union(sections.keys).subtracting(hidden).union([self.ownBundle])
+            //
+            // Apple's own menu bar items (input sources, Ethernet/network status,
+            // screen mirroring, …) are drawn by long-running system agents such as
+            // com.apple.controlcenter. Those processes are always running, so the
+            // "could not read its position, keep it visible" safety net used to
+            // white-list them forever: the item never hid, whatever the user asked
+            // for. Only the accessibility snapshot may keep an Apple bundle on the
+            // bar now; everything else Apple owns falls under the user's own choice.
+            let readable = Set(sections.keys)
+            let unreadable = Set(self.runningBundles()).subtracting(readable)
+            let appleAgents = unreadable.filter { $0.hasPrefix("com.apple.") }
+            let allowed = readable
+                .union(unreadable.subtracting(appleAgents))
+                .subtracting(hidden)
+                .union([self.ownBundle])
             // 系统自带项不在 Accessibility 的清单里，它的可见性完全由这张编号
             // 允许表决定：用户没勾选的项保持可见，勾选的项从表里去掉。
             let allowedSystemItems = SystemMenuItem.allowedNumbers(concealing: state.hiddenSystemItems)
@@ -194,6 +211,8 @@ final class NativeMenuBarVisibility {
             self.service.activate(allowing: allowed.sorted(), systemItems: allowedSystemItems) { result in
                 accept(result, isFallback: false)
             }
+            Self.lastSummary = "保留 \(allowed.count) 个应用、系统项允许 \(allowedSystemItems.count) 个编号"
+                + (appleAgents.isEmpty ? "" : "；已把 Apple 后台进程 \(appleAgents.sorted().joined(separator: "、")) 一律不保留")
         }
 
         // Positions reported for restricted items are stale. Reuse the last
