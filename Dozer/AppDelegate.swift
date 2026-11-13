@@ -82,6 +82,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     lazy var preferences: [SettingsPane] = [
         Dozer(),
+        SystemIcons(),
         General()
     ]
 

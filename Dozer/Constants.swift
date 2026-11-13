@@ -19,6 +19,8 @@ extension Defaults.Keys {
     static let buttonPadding: Defaults.Key<CGFloat> = Key<CGFloat>("buttonPadding", default: 25)
     static let animationEnabled: Defaults.Key<Bool> = Key<Bool>("animationEnabeld", default: false)
     static let isShortcutSet: Defaults.Key<Bool> = Key<Bool>("isShortcutSet", default: false)
+    /// 折叠时要一并隐藏的系统自带项，存的是 SystemMenuItem 的字符串名。
+    static let hiddenSystemItems: Defaults.Key<[String]> = Key<[String]>("hiddenSystemItems", default: [])
 }
 
 extension KeyboardShortcuts.Name {
@@ -31,6 +33,7 @@ extension NSStoryboard.Name {
 
 extension Settings.PaneIdentifier {
     static let dozer = Self("dozer")
+    static let systemIcons = Self("systemIcons")
     static let general = Self("general")
 }
 

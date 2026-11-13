@@ -28,6 +28,10 @@ public final class DozerIcons {
     }
     private var nativeNormalLeft: HelperstatusIcon?
     private var lastNativeError: String?
+    /// 折叠时一并收起的系统自带项（电池、时钟、Wi-Fi、控制中心）。
+    /// 系统项不属于任何应用、读不到位置，只能由用户在设置里显式指定。
+    var hiddenSystemItems: Set<SystemMenuItem> =
+        SystemMenuItem.hidden(fromStored: Defaults[.hiddenSystemItems])
 
     private init() {
         // 外接显示器或分辨率变化后，折叠长度必须按新的最宽屏幕重算，
@@ -71,6 +75,16 @@ public final class DozerIcons {
         MenuBarDiagnostics.show(separatorX: x, lastError: lastNativeError) { [weak self] in
             self?.engineDidChange()
         }
+    }
+
+    /// 更新要随折叠一起隐藏的系统自带项，已处于折叠状态时立即生效。
+    func setHiddenSystemItems(_ items: Set<SystemMenuItem>) {
+        hiddenSystemItems = items
+        Defaults[.hiddenSystemItems] = SystemMenuItem.storedNames(of: items)
+        guard let nativeVisibility = nativeVisibility,
+              nativeVisibility.requestedState.hideNormal
+        else { return }
+        applyNativeVisibility(hideNormal: true, hideRemove: nativeVisibility.requestedState.hideRemove)
     }
 
     /// 切换隐藏机制后先恢复现场，避免残留的隐藏状态导致图标"消失"。
@@ -365,7 +379,8 @@ public final class DozerIcons {
             frame.origin.y = primaryScreen.frame.maxY - frame.maxY
             return frame
         }
-        let state = MenuBarVisibilityState(hideNormal: hideNormal, hideRemove: hideRemove)
+        let state = MenuBarVisibilityState(hideNormal: hideNormal, hideRemove: hideRemove,
+                                           hiddenSystemItems: hideNormal ? hiddenSystemItems : [])
         nativeVisibility.apply(state, normal: accessibilityFrame(left), remove: accessibilityFrame(remove)) { [weak self] error in
             guard let self = self else { return }
             let applied = nativeVisibility.requestedState
@@ -378,7 +393,7 @@ public final class DozerIcons {
                 }
                 if shouldHide { icon.hide() } else { icon.show() }
             }
-            if applied == .expanded { self.nativeNormalLeft = nil }
+            if applied.isExpanded { self.nativeNormalLeft = nil }
             if applied.hideNormal {
                 self.didHideStatusBarIcons()
                 self.hideIconAndMenu()
