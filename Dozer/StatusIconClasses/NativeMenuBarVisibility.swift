@@ -160,8 +160,12 @@ final class NativeMenuBarVisibility {
             // 系统自带项不在 Accessibility 的清单里，它的可见性完全由这张编号
             // 允许表决定：用户没勾选的项保持可见，勾选的项从表里去掉。
             let allowedSystemItems = SystemMenuItem.allowedNumbers(concealing: state.hiddenSystemItems)
-            self.service.activate(allowing: allowed.sorted(), systemItems: allowedSystemItems) { [weak self] result in
-                guard let self = self, self.generation == request else {
+            // 系统可能拒收带「隐藏系统项」的允许表（实测编号范围超出上限时整份
+            // 配置都会被拒绝）。这时退一步只隐藏普通图标，别让整次点击变成
+            // 「什么都没隐藏」，系统项的问题留给诊断面板与设置面板说明。
+            let hideSystemItems = !state.hiddenSystemItems.isEmpty
+            func accept(_ result: Result<MenuBarVisibilityAssertion, Error>, isFallback: Bool) {
+                guard self.generation == request else {
                     if case .success(let stale) = result { stale.invalidate() }
                     return
                 }
@@ -171,11 +175,24 @@ final class NativeMenuBarVisibility {
                     let previous = self.assertion
                     self.assertion = replacement
                     previous?.invalidate()
+                    if isFallback {
+                        NSLog("Dozer 隐藏系统自带项的配置被系统拒绝，本次仅隐藏了普通图标。")
+                    }
                     completion(nil)
                 case .failure(let error):
+                    if hideSystemItems && !isFallback {
+                        self.service.activate(allowing: allowed.sorted(),
+                                              systemItems: SystemMenuItem.allowedNumbers(concealing: [])) { retry in
+                            accept(retry, isFallback: true)
+                        }
+                        return
+                    }
                     self.restore()
                     completion(error)
                 }
+            }
+            self.service.activate(allowing: allowed.sorted(), systemItems: allowedSystemItems) { result in
+                accept(result, isFallback: false)
             }
         }
 

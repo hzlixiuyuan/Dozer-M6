@@ -47,9 +47,10 @@ enum SystemMenuItem: String, CaseIterable {
         }
     }
 
-    /// 交给系统的完整编号范围。上限取实测过的 127：多给的编号不会变出图标，
-    /// 却能让将来系统新增编号的系统项默认保持可见。
-    static let allNumbers: ClosedRange<Int> = 0...127
+    /// 交给系统的完整编号范围。必须与改动前的 64 项上限保持一致：
+    /// 实测超过 64 项时系统会拒绝整份配置，导致连普通图标都隐藏不了。
+    /// 四个系统项的编号都落在 0..<64 内，缩小范围不影响功能。
+    static let allNumbers: Range<Int> = 0..<64
 
     /// 仍然保留在菜单栏上的编号：完整范围减去用户选择隐藏的那几项。
     static func allowedNumbers(concealing hidden: Set<SystemMenuItem>) -> [Int] {
