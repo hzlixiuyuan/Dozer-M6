@@ -8,6 +8,8 @@ on:
         type: boolean
         default: true
   push:
+    branches:
+      - main
     tags:
       - 'v*'
 
@@ -78,6 +80,8 @@ jobs:
           - 架构：arm64 + x86_64 通用二进制，M1 ~ M6 原生运行，无需 Rosetta 2
           - 隐藏机制：运行时自动选择。macOS 26 及更早用传统长度挤压；macOS 27+ 自动改用
             系统原生可见性限制（参考 Hidden Bar 的 macOS 27 适配）。**不用再按系统版本挑分支**
+          - 系统自带项：设置里新增「系统图标」面板，可勾选电池、时钟、Wi-Fi、控制中心，
+            随 Dozer 圆点一起收起（macOS 27+ 原生方式；旧系统上面板会置灰说明）
           - 签名：ad-hoc 临时签名，**未做 Developer ID 签名与公证**
 
           ### 安装
@@ -108,10 +112,20 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          set -euo pipefail
           if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
             TAG="build-${GITHUB_RUN_NUMBER}-${GITHUB_REF_NAME}"
-          else
+          elif [ "$GITHUB_REF_TYPE" = "tag" ]; then
             TAG="$GITHUB_REF_NAME"
+          else
+            # 推 main 时用 Info.plist 的版本号当标签：版本号没变（普通提交）就只
+            # 保留构建产物，不刷出重复的 Release；改过版本号则自动发一版。
+            VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" Dozer/Other/Info.plist)
+            TAG="v${VERSION}"
+            if gh release view "$TAG" >/dev/null 2>&1; then
+              echo "Release $TAG 已存在，本次只保留构建产物。"
+              exit 0
+            fi
           fi
           EXTRA=""
           if [ "$GITHUB_REF_NAME" = "macos27" ]; then
@@ -122,5 +136,5 @@ jobs:
             dist/Dozer-universal.dmg \
             dist/SHA256SUMS.txt \
             $EXTRA \
-            --title "Dozer 通用版 · ${GITHUB_REF_NAME} · 自动构建 #${GITHUB_RUN_NUMBER}" \
+            --title "Dozer 通用版 · ${TAG} · 自动构建 #${GITHUB_RUN_NUMBER}" \
             --notes-file dist/RELEASE_NOTES.md
