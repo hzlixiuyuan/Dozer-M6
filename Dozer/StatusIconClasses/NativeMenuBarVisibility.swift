@@ -7,6 +7,16 @@ import Cocoa
 struct MenuBarVisibilityState: Equatable {
     var hideNormal = false
     var hideRemove = false
+    /// 折叠时一并收起的系统自带项（电池、时钟、Wi-Fi、控制中心）。
+    /// 系统项不跟随位置判断，只能由用户在设置里指定。
+    var hiddenSystemItems: Set<SystemMenuItem> = []
+
+    /// 展开态：两个分区都不隐藏，届时系统项也必须全部可见，
+    /// 否则会出现「点了显示，时钟却没回来」这种半截状态。
+    var isExpanded: Bool {
+        !hideNormal && !hideRemove
+    }
+
     static let expanded = MenuBarVisibilityState()
 }
 
@@ -16,7 +26,9 @@ protocol MenuBarVisibilityAssertion: AnyObject {
 
 protocol MenuBarVisibilityProviding {
     var isAvailable: Bool { get }
-    func activate(allowing bundles: [String], completion: @escaping (Result<MenuBarVisibilityAssertion, Error>) -> Void)
+    func activate(allowing bundles: [String],
+                  systemItems: [Int],
+                  completion: @escaping (Result<MenuBarVisibilityAssertion, Error>) -> Void)
 }
 
 private final class NativeVisibilityAssertion: MenuBarVisibilityAssertion {
@@ -36,8 +48,11 @@ private final class NativeVisibilityAssertion: MenuBarVisibilityAssertion {
 struct NativeVisibilityService: MenuBarVisibilityProviding {
     var isAvailable: Bool { DozerNativeVisibilityIsAvailable() }
 
-    func activate(allowing bundles: [String], completion: @escaping (Result<MenuBarVisibilityAssertion, Error>) -> Void) {
-        DozerNativeVisibilityActivate(bundles) { assertion, error in
+    func activate(allowing bundles: [String],
+                  systemItems: [Int],
+                  completion: @escaping (Result<MenuBarVisibilityAssertion, Error>) -> Void) {
+        let numbers = systemItems.map { NSNumber(value: $0) }
+        DozerNativeVisibilityActivate(numbers, bundles) { assertion, error in
             if let assertion = assertion {
                 completion(.success(NativeVisibilityAssertion(assertion as AnyObject)))
             } else {
@@ -101,7 +116,7 @@ final class NativeMenuBarVisibility {
         generation += 1
         let request = generation
         requestedState = state
-        if state == .expanded {
+        if state.isExpanded {
             restore()
             completion(nil)
             return
@@ -142,7 +157,10 @@ final class NativeMenuBarVisibility {
             // Preserve apps whose Accessibility data could not be read, along
             // with Dozer itself and every application in the visible section.
             let allowed = Set(self.runningBundles()).union(sections.keys).subtracting(hidden).union([self.ownBundle])
-            self.service.activate(allowing: allowed.sorted()) { [weak self] result in
+            // 系统自带项不在 Accessibility 的清单里，它的可见性完全由这张编号
+            // 允许表决定：用户没勾选的项保持可见，勾选的项从表里去掉。
+            let allowedSystemItems = SystemMenuItem.allowedNumbers(concealing: state.hiddenSystemItems)
+            self.service.activate(allowing: allowed.sorted(), systemItems: allowedSystemItems) { [weak self] result in
                 guard let self = self, self.generation == request else {
                     if case .success(let stale) = result { stale.invalidate() }
                     return

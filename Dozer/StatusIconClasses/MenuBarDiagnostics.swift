@@ -53,12 +53,17 @@ final class MenuBarDiagnostics {
         let native = HideEngine.nativeServiceAvailable
         let accessibility = AXIsProcessTrusted()
         let mode = HideEngine.manualEngine == nil ? "自动选择" : "手动指定"
+        let hiddenSystemItems = DozerIcons.shared.hiddenSystemItems
+        let systemItemsText = hiddenSystemItems.isEmpty
+            ? "全部保持可见（可在「系统图标」设置里勾选）"
+            : "折叠时隐藏 " + SystemMenuItem.titles(of: hiddenSystemItems).joined(separator: "、")
 
         var lines = [
             "系统：macOS \(osString)（主版本 \(HideEngine.macOSMajor)）· \(architecture)",
             "当前隐藏机制：\(HideEngine.displayName)（\(mode)）",
             "原生可见性服务：\(native ? "可用" : "不可用")",
             "辅助功能权限：\(accessibility ? "已授权" : "未授权")",
+            "系统自带项：\(systemItemsText)",
             "折叠长度：\(Int(HideEngine.collapsedLength)) pt（最宽屏幕 \(Int(widest)) pt）",
             "菜单栏状态项：检测到 \(windows.total) 个" + (separatorX == nil
                 ? "，圆点当前不可见，无法测量左侧数量（请先展开）"
@@ -85,6 +90,10 @@ final class MenuBarDiagnostics {
         }
         if HideEngine.current == .native && !native {
             lines.append("⚠️ 原生服务在此系统不可用，请改用「传统方式」。")
+        }
+        if !hiddenSystemItems.isEmpty && HideEngine.current == .legacy {
+            lines.append("⚠️ 电池、时钟、Wi-Fi、控制中心这些系统自带项只有在 macOS 27+ 的原生方式下才能隐藏；")
+            lines.append("   当前为传统方式，它们会一直留在菜单栏上。")
         }
         lines.append("")
         lines.append("切换后请重新点击圆点验证。诊断内容也已写入系统日志，可复制后反馈。")

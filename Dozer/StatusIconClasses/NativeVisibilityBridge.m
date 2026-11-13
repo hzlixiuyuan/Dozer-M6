@@ -27,7 +27,8 @@ BOOL DozerNativeVisibilityIsAvailable(void) {
         && [assertion instancesRespondToSelector:@selector(invalidate)];
 }
 
-void DozerNativeVisibilityActivate(NSArray<NSString *> *allowedBundles,
+void DozerNativeVisibilityActivate(NSArray<NSNumber *> *allowedSystemItems,
+                                   NSArray<NSString *> *allowedBundles,
                                    void (^completion)(id, NSError *)) {
     void (^finish)(id, NSError *) = ^(id assertion, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{ completion(assertion, error); });
@@ -38,15 +39,15 @@ void DozerNativeVisibilityActivate(NSArray<NSString *> *allowedBundles,
     }
     id assertion = nil;
     @try {
-        // Preserve Apple's items, including Control Center, Wi-Fi and the clock.
-        // The API expects arrays, and ignores system item IDs absent on this Mac.
-        NSMutableArray<NSNumber *> *systemItems = [NSMutableArray array];
-        for (NSInteger index = 0; index < 64; index++) {
-            [systemItems addObject:@(index)];
-        }
+        // Both arguments are allow-lists: whatever the system finds missing gets
+        // hidden. Apple's own items (battery, clock, Wi-Fi, Control Center) are
+        // numbered by MenuBarAgent, so the caller decides which of them stay —
+        // a number that this Mac does not draw is simply ignored, which lets one
+        // list serve every machine.
         id configuration = ((id (*)(id, SEL, NSArray *, NSArray *))objc_msgSend)(
             [NSClassFromString(@"MBAssessmentModeConfiguration") alloc],
-            @selector(initWithAllowedSystemItems:allowedBundleIdentifiers:), systemItems, [allowedBundles copy]);
+            @selector(initWithAllowedSystemItems:allowedBundleIdentifiers:),
+            [allowedSystemItems copy], [allowedBundles copy]);
         assertion = [[NSClassFromString(@"MBAssessmentModeAssertion") alloc] init];
         if (!configuration || !assertion) {
             finish(nil, VisibilityError(@"Could not create the menu bar visibility configuration."));

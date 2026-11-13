@@ -5,7 +5,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 BOOL DozerNativeVisibilityIsAvailable(void);
-void DozerNativeVisibilityActivate(NSArray<NSString *> *allowedBundles,
+void DozerNativeVisibilityActivate(NSArray<NSNumber *> *allowedSystemItems,
+                                   NSArray<NSString *> *allowedBundles,
                                    void (^completion)(id _Nullable assertion, NSError * _Nullable error));
 void DozerNativeVisibilityInvalidate(id assertion);
 NS_ASSUME_NONNULL_END
